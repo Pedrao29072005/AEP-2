@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoFlux City</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegacao principal">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">E</div>
+          <div>
+            <strong>EcoFlux City</strong>
+            <span>Residuos inteligentes</span>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <a href="#painel" class="active">Painel</a>
+          <a href="#mapa">Mapa</a>
+          <a href="#notificar">Notificar</a>
+          <a href="#sensores">IoT</a>
+          <a href="#guia">Guia dev</a>
+        </nav>
+
+        <div class="ods-card">
+          <span>ODS 11</span>
+          <strong>Cidades sustentaveis e resilientes</strong>
+          <p>Notificacoes cidadas viram dados para limpeza urbana e decisao publica.</p>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Smart cities + gestao de residuos</p>
+            <h1>Operacao colaborativa contra descarte irregular</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost-btn" id="seedDataBtn" type="button">Recarregar demo</button>
+            <button class="ghost-btn" id="exportBtn" type="button">Exportar dados</button>
+            <button class="primary-btn" id="openReportBtn" type="button">Nova notificacao</button>
+          </div>
+        </header>
+
+        <section class="metrics-grid" id="painel" aria-label="Indicadores da cidade">
+          <article>
+            <span>Ocorrencias abertas</span>
+            <strong id="openCount">0</strong>
+            <small>prioridade calculada por risco</small>
+          </article>
+          <article>
+            <span>Tempo medio estimado</span>
+            <strong id="avgTime">0h</strong>
+            <small>logistica de atendimento</small>
+          </article>
+          <article>
+            <span>Alertas IoT</span>
+            <strong id="iotAlerts">0</strong>
+            <small>sensores acima do limite</small>
+          </article>
+          <article>
+            <span>Impacto ambiental</span>
+            <strong id="impactScore">0%</strong>
+            <small>indice de reducao de risco</small>
+          </article>
+        </section>
+
+        <section class="workspace-grid">
+          <section class="map-panel" id="mapa" aria-labelledby="mapTitle">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Mapa operacional</p>
+                <h2 id="mapTitle">Pontos criticos e rotas de coleta</h2>
+              </div>
+              <div class="status-pill" id="mapStatus">Sincronizado</div>
+            </div>
+            <div class="city-map" id="cityMap" aria-label="Mapa sintetico da cidade"></div>
+            <div class="legend">
+              <span><i class="pin organic"></i> Organico</span>
+              <span><i class="pin recyclable"></i> Reciclavel</span>
+              <span><i class="pin construction"></i> Entulho</span>
+              <span><i class="pin hazardous"></i> Risco</span>
+            </div>
+          </section>
+
+          <section class="queue-panel" aria-labelledby="queueTitle">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Triagem</p>
+                <h2 id="queueTitle">Fila de notificacoes</h2>
+              </div>
+            </div>
+            <div class="queue-tools">
+              <label>
+                Buscar
+                <input id="searchInput" type="search" placeholder="Local, categoria ou descricao" />
+              </label>
+              <label>
+                Prioridade
+                <select id="filterSelect" aria-label="Filtrar por prioridade">
+                  <option value="all">Todas</option>
+                  <option value="Alta">Alta</option>
+                  <option value="Media">Media</option>
+                  <option value="Baixa">Baixa</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select id="statusFilter" aria-label="Filtrar por status">
+                  <option value="all">Todos</option>
+                  <option value="Em triagem">Em triagem</option>
+                  <option value="Equipe enviada">Equipe enviada</option>
+                  <option value="Resolvido">Resolvido</option>
+                </select>
+              </label>
+            </div>
+            <div class="report-list" id="reportList"></div>
+          </section>
+        </section>
+
+        <section class="split-grid">
+          <section class="form-panel" id="notificar" aria-labelledby="reportTitle">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Participacao cidada</p>
+                <h2 id="reportTitle">Registrar descarte irregular</h2>
+              </div>
+            </div>
+            <form id="reportForm">
+              <label>
+                Local aproximado
+                <input name="location" type="text" placeholder="Ex.: Marginal Tiete, ponte X" required />
+              </label>
+              <label>
+                Categoria
+                <select name="category" required>
+                  <option value="Organico">Organico</option>
+                  <option value="Reciclavel">Reciclavel</option>
+                  <option value="Entulho">Entulho</option>
+                  <option value="Perigoso">Perigoso</option>
+                </select>
+              </label>
+              <label>
+                Bairro
+                <select name="district" required>
+                  <option value="Centro">Centro</option>
+                  <option value="Santana">Santana</option>
+                  <option value="Vila Leopoldina">Vila Leopoldina</option>
+                  <option value="Parque Novo Mundo">Parque Novo Mundo</option>
+                  <option value="Zona Sul">Zona Sul</option>
+                </select>
+              </label>
+              <label>
+                Descricao
+                <textarea name="description" rows="4" placeholder="Volume, risco, referencias visuais..." required></textarea>
+              </label>
+              <div class="form-row">
+                <label>
+                  Severidade
+                  <input name="severity" type="range" min="1" max="5" value="3" />
+                </label>
+                <label>
+                  Evidencia
+                  <input name="evidence" type="file" accept="image/*" />
+                </label>
+              </div>
+              <output class="severity-output" id="severityOutput">Severidade 3/5 - prioridade media</output>
+              <button class="primary-btn" type="submit">Enviar notificacao</button>
+            </form>
+          </section>
+
+          <section class="sensor-panel" id="sensores" aria-labelledby="sensorTitle">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Internet das Coisas</p>
+                <h2 id="sensorTitle">Sensores de lixeiras e ecopontos</h2>
+              </div>
+              <button class="ghost-btn" id="simulateBtn" type="button">Simular leitura</button>
+            </div>
+            <div class="sensor-grid" id="sensorGrid"></div>
+          </section>
+        </section>
+
+        <section class="guide-panel" id="guia" aria-labelledby="guideTitle">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Guia educativo para devs</p>
+              <h2 id="guideTitle">Da ideia ao produto publico</h2>
+            </div>
+          </div>
+          <div class="timeline">
+            <article>
+              <span>01</span>
+              <strong>Levantar requisitos georreferenciados</strong>
+              <p>Registrar local, categoria, foto, descricao, severidade e status da ocorrencia.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <strong>Integrar mapas e dados em tempo real</strong>
+              <p>Combinar notificacoes cidadas, sensores IoT e rotas de limpeza para priorizar areas criticas.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <strong>Gerar decisao acionavel</strong>
+              <p>Transformar relatos em filas de atendimento, indicadores e relatorios para gestores publicos.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <strong>Escalar com interoperabilidade</strong>
+              <p>Expor APIs, padronizar dados e preparar a arquitetura para bairros, cidades e consorcios.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="reportDialog">
+      <div class="dialog-head">
+        <strong>Notificacao registrada</strong>
+        <button id="closeDialogBtn" type="button" aria-label="Fechar">x</button>
+      </div>
+      <p>O ponto foi adicionado ao mapa e entrou na fila de triagem da limpeza urbana.</p>
+    </dialog>
+
+    <dialog id="detailDialog">
+      <div class="dialog-head">
+        <strong id="detailTitle">Detalhes da notificacao</strong>
+        <button id="closeDetailBtn" type="button" aria-label="Fechar">x</button>
+      </div>
+      <div id="detailBody"></div>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
